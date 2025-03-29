@@ -31,7 +31,6 @@ const Page = () => {
 
     const handleSubmit = async(e: FormEvent)=>{
         e.preventDefault();
-        console.log(content)
         try {
             setIsSubmitting(true)
             if(!userId){

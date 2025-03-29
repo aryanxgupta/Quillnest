@@ -20,7 +20,7 @@ export async function craetePosts(data: CreatePostParams){
             return { success: false, message: "Unauthorized" }
         }
 
-        const post = await prisma.post.create({
+        await prisma.post.create({
             data: {
                 title: data.title, 
                 content: data.content, 
@@ -28,7 +28,6 @@ export async function craetePosts(data: CreatePostParams){
             }
         })
 
-        console.log(post)
         return { success: true, message: "Post created successfully"}
     } catch (error) {
         return { success: false, message: error }
