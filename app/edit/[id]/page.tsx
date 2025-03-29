@@ -9,6 +9,7 @@ import Tiptap from '@/components/TipTap'
 import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
 import EditPostSkeleton from '@/components/EditPostSkeleton'
+import { useCompletion } from '@ai-sdk/react'
 
 
 export default function Page({ params }: { params: Promise<{ id: string }>}){
@@ -68,6 +69,17 @@ export default function Page({ params }: { params: Promise<{ id: string }>}){
         }
     }
 
+    const { completion, complete, isLoading } = useCompletion({
+        api: '/api/generate'
+    })
+    const handleGenerate = async()=>{
+        if(!title || title === "Sample Title"){
+            toast("Add a topic in title for AI to help")
+            return
+        }
+        await complete(title)
+    }
+
     if(loading || !isLoaded){
         return(
             <div>
@@ -75,6 +87,7 @@ export default function Page({ params }: { params: Promise<{ id: string }>}){
             </div>
         )
     }
+
 
     return (
         <div className='py-10 px-8 md:px-16'>
@@ -90,8 +103,24 @@ export default function Page({ params }: { params: Promise<{ id: string }>}){
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
             />
+            {completion.length>0 && 
+                <div className='p-1 mb-10 bg-linear-to-br from-purple-700 to-pink-400 rounded-xl shadow-xl'>
+                    <div className='p-2 bg-white ring-2 font-ubuntu ring-zinc-100 shadow-xl rounded-lg mb-1 flex-col'>
+                        <Tiptap content={completion} editable={false} />
+                    </div>
+                </div>
+            }
             <Tiptap content={content} setContent={setContent}/>
             <div className='flex items-center justify-between w-full mt-5'>
+                <Button type='button' className='bg-linear-to-r from-purple-700 to-pink-400 ' onClick={handleGenerate} disabled={isLoading}>
+                    {isLoading? 
+                    <div className='flex items-center justify-center gap-4'>
+                        <div className='animate-spin'><Loader2 /></div>
+                        <div>Generating</div>
+                    </div> 
+                    : 
+                    "AI Generate" }
+                </Button>
                 <Button type='submit' className='w-fit' disabled={isSubmitting}>
                     {isSubmitting? 
                     <div className='flex items-center justify-center gap-4'>

@@ -2,6 +2,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { CreatePostParams, PostWithAuthor } from "./constats";
 import { prisma } from "./db";
+import { google } from "@ai-sdk/google"
+import { streamText } from "ai"
 
 export type GetPostResponse = {
     success: true,
@@ -82,5 +84,14 @@ export async function deletePost(postId: string) {
     } catch (error) {
         return { success: false, message: error instanceof Error? error.message : "Something went wrong" }
     }
+}
+
+export async function generateContent(title: string){
+    const result = streamText({
+        model: google('gemini-2.0-flash-001'),
+        system: 'Write a poem about embedding models'
+    })
+
+    return result.toDataStreamResponse()
 }
 

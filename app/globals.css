@@ -207,3 +207,20 @@
   }
 }
 
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-border {
+  background: conic-gradient(from 0deg, #ff00ff, #ff6600, #ff00ff);
+  animation: rotate 4s linear infinite;
+  mask: linear-gradient(white 0 0) content-box, linear-gradient(white 0 0);
+  -webkit-mask: linear-gradient(white 0 0) content-box, linear-gradient(white 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: destination-out;
+}

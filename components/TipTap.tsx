@@ -36,7 +36,7 @@ const Tiptap = ({ content, setContent, editable=true }: { content: string, setCo
       Blockquote, 
       CodeBlock.configure({
         HTMLAttributes: {
-          class: "w-full bg-gray-900 text-white p-4 rounded-md overflow-x-auto"
+          class: "w-full bg-gray-900 text-white p-4 rounded-md overflow-x-auto max-sm:text-sm"
         }
       })
     ],
