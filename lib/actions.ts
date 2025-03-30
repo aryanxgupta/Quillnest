@@ -2,8 +2,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { CreatePostParams, PostWithAuthor } from "./constats";
 import { prisma } from "./db";
-import { google } from "@ai-sdk/google"
-import { streamText } from "ai"
 
 export type GetPostResponse = {
     success: true,
@@ -15,11 +13,13 @@ export type GetPostResponse = {
 
 export async function craetePosts(data: CreatePostParams){
     try {
+        console.log("Authenticating")
         const {userId} = await auth()
         if(!userId){
             return { success: false, message: "Unauthorized" }
         }
 
+        console.log("creating post")
         await prisma.post.create({
             data: {
                 title: data.title, 
@@ -28,8 +28,10 @@ export async function craetePosts(data: CreatePostParams){
             }
         })
 
+        console.log("post created")
         return { success: true, message: "Post created successfully"}
     } catch (error) {
+        console.log("Error", error)
         return { success: false, message: error }
     }
 }
@@ -83,14 +85,5 @@ export async function deletePost(postId: string) {
     } catch (error) {
         return { success: false, message: error instanceof Error? error.message : "Something went wrong" }
     }
-}
-
-export async function generateContent(title: string){
-    const result = streamText({
-        model: google('gemini-2.0-flash-001'),
-        system: 'Write a poem about embedding models'
-    })
-
-    return result.toDataStreamResponse()
 }
 
